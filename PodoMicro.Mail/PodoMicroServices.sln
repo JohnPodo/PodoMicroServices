@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodoMicro.Mail", "PodoMicro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodoMicro.Token", "..\PodoMicro.Token\PodoMicro.Token.csproj", "{B935C8D9-05B4-424A-ABF9-023C6C183E49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodoMicro.Password.Encryptor", "..\PodoMicro.Password.Encryptor\PodoMicro.Password.Encryptor.csproj", "{523CF37F-4621-44FC-BCBC-5054681B028B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B935C8D9-05B4-424A-ABF9-023C6C183E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B935C8D9-05B4-424A-ABF9-023C6C183E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B935C8D9-05B4-424A-ABF9-023C6C183E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{523CF37F-4621-44FC-BCBC-5054681B028B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{523CF37F-4621-44FC-BCBC-5054681B028B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{523CF37F-4621-44FC-BCBC-5054681B028B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{523CF37F-4621-44FC-BCBC-5054681B028B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
