@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/PodoMicroServices.MailService/PodoMicroServices.MailService/appsettings.Development.json
+/PodoMicroServices.MailService/PodoMicroServices.MailService/appsettings.json
