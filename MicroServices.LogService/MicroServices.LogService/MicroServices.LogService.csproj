@@ -20,8 +20,4 @@
     <ProjectReference Include="..\MicroServices.LogService.Common\MicroServices.LogService.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -9,6 +9,7 @@ namespace MicroServices.LogService
         {
             services.AddDbContext<LogContext>();
             services.AddTransient<Services.LogService>();
+            services.AddTransient<Services.LogFetcher>();
         }
     }
 }
