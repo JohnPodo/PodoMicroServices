@@ -14,11 +14,13 @@ namespace MicroServices.LogService.Controllers
     {
         private readonly LogFetcher _fetcher;
         private readonly Services.LogService _service;
+        private readonly LogCleaner _cleaner;
 
-        public LogController(LogFetcher fetcher, Services.LogService service)
+        public LogController(LogFetcher fetcher, Services.LogService service,LogCleaner cleaner)
         {
             _fetcher = fetcher;
             _service = service;
+            _cleaner = cleaner;
             _service.Initialize("LogController", Guid.NewGuid());
         }
 

@@ -100,13 +100,13 @@ namespace MicroServices.LogService.Services
             }
         }
 
-        internal async Task<(bool, string)> DeleteLogs(DateTime date)
+        internal async Task<(bool, string)> DeleteLogs()
         {
             try
             {
                 if (_context is null) return (false, "Database Context is null");
                 if (_context.Logs is null) return (false, "Logs Db Set is null");
-                var desiredLogs = await _context.Logs.Where(l => l.Created.Date.CompareTo(date.Date) < 0).ToListAsync();
+                var desiredLogs = await _context.Logs.Where(l => l.Created.Date.CompareTo(DateTime.Now) < 7).ToListAsync();
                 if (desiredLogs is null) return (false, $"No Logs found");
                 _context.Logs.RemoveRange(desiredLogs);
                 await _context.SaveChangesAsync();
