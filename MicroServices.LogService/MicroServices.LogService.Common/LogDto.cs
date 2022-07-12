@@ -8,6 +8,7 @@ namespace MicroServices.LogService.Common
 {
     public class LogDto
     {
+        public int Id { get; set; }
         public string Name { get; set; } = String.Empty;
 
         public Guid GroupSession { get; set; }

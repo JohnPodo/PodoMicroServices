@@ -24,7 +24,7 @@ namespace MicroServices.LogService.Models
         }
 
         public Log(LogDto newLog)
-        {
+        { 
             Name = newLog.Name;
             GroupSession = newLog.GroupSession;
             Created = newLog.Created;

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroServices.LogService", "MicroServices.LogService\MicroServices.LogService.csproj", "{B77789D1-59A1-42C6-BADB-D095033D2DE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroServices.LogService.Common", "MicroServices.LogService.Common\MicroServices.LogService.Common.csproj", "{38FB127F-FAC7-43F7-85C1-5C1E89270918}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroServices.LogService.Common", "MicroServices.LogService.Common\MicroServices.LogService.Common.csproj", "{38FB127F-FAC7-43F7-85C1-5C1E89270918}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroServices.LogService.Client", "MicroServices.LogService.Client\MicroServices.LogService.Client.csproj", "{CE834CAD-E95D-4A38-B7A8-00294F741773}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{38FB127F-FAC7-43F7-85C1-5C1E89270918}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38FB127F-FAC7-43F7-85C1-5C1E89270918}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38FB127F-FAC7-43F7-85C1-5C1E89270918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE834CAD-E95D-4A38-B7A8-00294F741773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE834CAD-E95D-4A38-B7A8-00294F741773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE834CAD-E95D-4A38-B7A8-00294F741773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE834CAD-E95D-4A38-B7A8-00294F741773}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
