@@ -4,6 +4,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Company>Podo The Developer</Company>
+    <Version>1.0.0</Version>
+    <Description>A client to easily consume matching API</Description>
+    <Copyright>If you steal it I will find you</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\MicroServices.LogService.Common\MicroServices.LogService.Common.csproj" />
   </ItemGroup>
-
+	
 </Project>

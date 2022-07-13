@@ -19,24 +19,24 @@ namespace MicroServices.LogService.Client
             _session = Guid.NewGuid();
         }
 
-        public async Task<BaseDataResponse<LogDto>?> GetLogs()
+        public async Task<BaseDataResponse<List<LogDto>>?> GetLogs()
         {
-            return await ExecuteRequest<BaseDataResponse<LogDto>>("/GetLogs", null, Method.Get);
+            return await ExecuteRequest<BaseDataResponse<List<LogDto>>>("/GetLogs", null, Method.Get);
         }
 
-        public async Task<BaseDataResponse<LogDto>?> GetLogs(Guid session)
+        public async Task<BaseDataResponse<List<LogDto>>?> GetLogs(Guid session)
         {
-            return await ExecuteRequest<BaseDataResponse<LogDto>>($"/GetLogsPerSession/{session}", null, Method.Get);
+            return await ExecuteRequest<BaseDataResponse<List<LogDto>>>($"/GetLogsPerSession/{session}", null, Method.Get);
         }
 
-        public async Task<BaseDataResponse<LogDto>?> GetLogs(Severity severity)
+        public async Task<BaseDataResponse<List<LogDto>>?> GetLogs(Severity severity)
         {
-            return await ExecuteRequest<BaseDataResponse<LogDto>>($"/GetLogsPerSeverity/{severity}", null, Method.Get);
+            return await ExecuteRequest<BaseDataResponse<List<LogDto>>>($"/GetLogsPerSeverity/{severity}", null, Method.Get);
         }
 
         public async Task<BaseResponse?> DeleteLog(int id)
         {
-            return await ExecuteRequest<BaseDataResponse<LogDto>>($"/DeleteLog/{id}", null, Method.Delete);
+            return await ExecuteRequest<BaseResponse>($"/DeleteLog/{id}", null, Method.Delete);
         }
         public async Task<BaseResponse?> WriteToLog(string message, Severity severity)
         {
@@ -48,7 +48,7 @@ namespace MicroServices.LogService.Client
             dto.Severity = severity;
             dto.Message = message;
             dto.Name = _name; 
-            return await ExecuteRequest<BaseDataResponse<LogDto>>($"/WriteLog", dto, Method.Post);
+            return await ExecuteRequest<BaseResponse>($"/WriteLog", dto, Method.Post);
         }
 
         private async Task<T?> ExecuteRequest<T>(string extension, object? body, Method method) where T : class
