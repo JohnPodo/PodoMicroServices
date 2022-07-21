@@ -21,5 +21,6 @@ namespace PodoMicroServices.DAL
 
         public DbSet<Log>? Logs { get; set; }
         public DbSet<Models.FileModels.File>? Files { get; set; }
+        public DbSet<Models.SecretModels.Secret>? Secrets { get; set; }
     }
 }

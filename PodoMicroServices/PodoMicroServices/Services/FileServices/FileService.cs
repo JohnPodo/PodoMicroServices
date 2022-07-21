@@ -55,7 +55,7 @@ namespace PodoMicroServices.Services.FileServices
             if (newFile is null) return new BaseResponse("Invalid data");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredFile = await _context.Files.Where(f => f.Name == newFile.Name && f.Folder == newFile.Folder).AsNoTracking().FirstOrDefaultAsync();
+            var desiredFile = await _context.Files.Where(f => f.Name == newFile.Name && f.Folder == newFile.Folder && f.AppId == newFile.AppId).AsNoTracking().FirstOrDefaultAsync();
             if (desiredFile is not null) return new BaseResponse("File with that name already exists");
             await _context.Files.AddAsync(newFile);
             await _context.SaveChangesAsync();
