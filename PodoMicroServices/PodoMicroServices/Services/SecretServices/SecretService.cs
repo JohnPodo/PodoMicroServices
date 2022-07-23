@@ -19,7 +19,7 @@ namespace PodoMicroServices.Services.SecretServices
             if (id == 0) return new BaseDataResponse<Models.SecretModels.Secret>("Invalid Id");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredSecret = await _context.Secrets.Where(f => f.Id == id).Where(f => f.AppId == appId).AsNoTracking().FirstOrDefaultAsync();
+            var desiredSecret = await _context.Secrets.Where(f => f.Id == id).Where(f => f.App != null && f.App.Id == appId).AsNoTracking().FirstOrDefaultAsync();
             if (desiredSecret is null) return new BaseDataResponse<Models.SecretModels.Secret>("No Picture Found");
             return new BaseDataResponse<Models.SecretModels.Secret>(desiredSecret);
         }
@@ -29,7 +29,7 @@ namespace PodoMicroServices.Services.SecretServices
             if (appId == 0) return new BaseDataResponse<List<Models.SecretModels.Secret>>("Invalid appId");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredFiles = await _context.Secrets.Where(f => f.AppId == appId).AsNoTracking().ToListAsync();
+            var desiredFiles = await _context.Secrets.Where(f => f.App != null && f.App.Id == appId).AsNoTracking().ToListAsync();
             if (desiredFiles is null) return new BaseDataResponse<List<Models.SecretModels.Secret>>("No Pictures Found");
             return new BaseDataResponse<List<Models.SecretModels.Secret>>(desiredFiles);
         }
@@ -40,7 +40,7 @@ namespace PodoMicroServices.Services.SecretServices
             if (string.IsNullOrEmpty(secretName)) return new BaseDataResponse<List<Models.SecretModels.Secret>>("Invalid folderName");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredFiles = await _context.Secrets.Where(f => f.AppId == appId).Where(f => f.Name == secretName).AsNoTracking().ToListAsync();
+            var desiredFiles = await _context.Secrets.Where(f => f.App != null && f.App.Id == appId).Where(f => f.Name == secretName).AsNoTracking().ToListAsync();
             if (desiredFiles is null) return new BaseDataResponse<List<Models.SecretModels.Secret>>("No Pictures Found");
             return new BaseDataResponse<List<Models.SecretModels.Secret>>(desiredFiles);
         }
@@ -50,7 +50,7 @@ namespace PodoMicroServices.Services.SecretServices
             if (newSecret is null) return new BaseResponse("Invalid data");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredSecret = await _context.Secrets.Where(f => f.Name == newSecret.Name && f.AppId == newSecret.AppId).AsNoTracking().FirstOrDefaultAsync();
+            var desiredSecret = await _context.Secrets.Where(f => f.Name == newSecret.Name && f.App != null && f.App == newSecret.App).AsNoTracking().FirstOrDefaultAsync();
             if (desiredSecret is not null) return new BaseResponse("Secret with that name already exists");
             await _context.Secrets.AddAsync(newSecret);
             await _context.SaveChangesAsync();
@@ -62,7 +62,7 @@ namespace PodoMicroServices.Services.SecretServices
             if (newSecret is null) return new BaseResponse("Invalid data");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredSecret = await _context.Secrets.Where(f => f.Id == id && f.AppId == newSecret.AppId).FirstOrDefaultAsync();
+            var desiredSecret = await _context.Secrets.Where(f => f.Id == id && f.App != null && f.App == newSecret.App).FirstOrDefaultAsync();
             if (desiredSecret is null) return new BaseResponse("Secret with that id doesn't exists");
             desiredSecret.ExpiresIn = newSecret.ExpiresIn;
             desiredSecret.Value = newSecret.Value;
@@ -76,7 +76,7 @@ namespace PodoMicroServices.Services.SecretServices
         {
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredSecret = await _context.Secrets.Where(f => f.Id == id && f.AppId == appId).FirstOrDefaultAsync();
+            var desiredSecret = await _context.Secrets.Where(f => f.Id == id && f.App != null && f.App.Id == appId).FirstOrDefaultAsync();
             if (desiredSecret is null) return new BaseResponse("Secret with that id doesn't exists");
             _context.Secrets.Remove(desiredSecret);
             await _context.SaveChangesAsync();

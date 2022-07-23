@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PodoMicroServices.Controllers.BaseClass;
 using PodoMicroServices.Dto.FileDto;
 using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
+using PodoMicroServices.Services;
 using PodoMicroServices.Services.FileServices;
 using PodoMicroServices.Services.LogServices;
 
@@ -12,18 +14,19 @@ namespace PodoMicroServices.Controllers
     {
         private readonly FileService _service;
 
-        public FileController(LogService logService, FileService service) : base(logService)
+        public FileController(LogService logService, FileService service,UserService userService) : base(logService, userService)
         {
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetFilesPerAppId([FromHeader] int appId)
+        [HttpGet,Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetFilesPerAppId()
         {
             try
             {
                 await LogRequest();
-                var data = await _service.GetFiles(appId);
+                if(_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _service.GetFiles(_app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -36,13 +39,14 @@ namespace PodoMicroServices.Controllers
 
         }
 
-        [HttpGet("{folderName}")]
-        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetFilesPerAppId([FromHeader] int appId,string folderName)
+        [HttpGet("{folderName}"), Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetFilesPerAppId(string folderName)
         {
             try
             {
-                await LogRequest();
-                var data = await _service.GetFiles(appId, folderName);
+                await LogRequest(); 
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _service.GetFiles(_app.Id, folderName);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -55,13 +59,14 @@ namespace PodoMicroServices.Controllers
 
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BaseDataResponse<Models.FileModels.File>>> GetFile([FromHeader] int appId,int id)
+        [HttpGet("{id}"), Authorize]
+        public async Task<ActionResult<BaseDataResponse<Models.FileModels.File>>> GetFile(int id)
         {
             try
             {
                 await LogRequest();
-                var data = await _service.GetFile(id, appId);
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _service.GetFile(id, _app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -74,15 +79,15 @@ namespace PodoMicroServices.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse>> AddFile([FromHeader] int appId,[FromBody]FileDto dto)
+        [HttpPost, Authorize]
+        public async Task<ActionResult<BaseResponse>> AddFile([FromBody]FileDto dto)
         {
             try
             {
                 await LogRequest();
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                var newFile = new Models.FileModels.File(dto, appId);
-                if (appId <= 1) return BadRequest(new BaseResponse("Invalid App Id"));
+                var newFile = new Models.FileModels.File(dto, _app); 
                 response = _service.ValidateFile(newFile);
                 if (!response.Success) return BadRequest(response);
                 response = await _service.AddFile(newFile);
@@ -96,14 +101,15 @@ namespace PodoMicroServices.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResponse>> DeleteFile(int id, [FromHeader] int appId)
+        [HttpDelete("{id}"), Authorize]
+        public async Task<ActionResult<BaseResponse>> DeleteFile(int id)
         {
             try
             {
                 await LogRequest();
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                response = await _service.DeleteFile(id, appId);
+                response = await _service.DeleteFile(id, _app.Id);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }

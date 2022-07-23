@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
 
 namespace PodoMicroServices.DAL
@@ -20,6 +21,8 @@ namespace PodoMicroServices.DAL
         //}
 
         public DbSet<Log>? Logs { get; set; }
+        public DbSet<User>? Users { get; set; }
+        public DbSet<App>? Apps { get; set; }
         public DbSet<Models.FileModels.File>? Files { get; set; }
         public DbSet<Models.SecretModels.Secret>? Secrets { get; set; }
     }

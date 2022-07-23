@@ -1,26 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PodoMicroServices.Controllers.BaseClass;
 using PodoMicroServices.Dto.LogDto;
 using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
+using PodoMicroServices.Services;
 using PodoMicroServices.Services.LogServices;
 
 namespace PodoMicroServices.Controllers
 {
     public class LogController : SuperController
     {
-        public LogController(LogService service) : base(service)
+        public LogController(LogService service,UserService userService) : base(service, userService)
         {
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogs([FromHeader] int appId)
+        [HttpGet, Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogs()
         {
             try
             {
                 await LogRequest();
-                var data = await _logService.GetLogs(appId);
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _logService.GetLogs(_app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -33,13 +36,14 @@ namespace PodoMicroServices.Controllers
 
         }
 
-        [HttpGet("{session}")]
-        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogsPerSession(Guid session, [FromHeader] int appId)
+        [HttpGet("{session}"), Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogsPerSession(Guid session)
         {
             try
             {
                 await LogRequest();
-                var data = await _logService.GetLogs(session, appId);
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _logService.GetLogs(session, _app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -51,13 +55,14 @@ namespace PodoMicroServices.Controllers
             }
         }
 
-        [HttpGet("{severity}")]
-        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogsPerSeverity(Severity severity, [FromHeader] int appId)
+        [HttpGet("{severity}"), Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<Log>>>> GetLogsPerSeverity(Severity severity)
         {
             try
             {
                 await LogRequest();
-                var data = await _logService.GetLogs(appId, severity);
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
+                var data = await _logService.GetLogs(_app.Id, severity);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -69,17 +74,17 @@ namespace PodoMicroServices.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse>> WriteLog([FromHeader] int appId,[FromBody] LogDto dto)
+        [HttpPost, Authorize]
+        public async Task<ActionResult<BaseResponse>> WriteLog([FromBody] LogDto dto)
         {
             try
             {
                 await LogRequest();
-                if(appId <= 1) return BadRequest(new BaseResponse("Invalid App Id"));
+                if (_app is null) return BadRequest(new BaseResponse("No App Found")); 
                 var response = new BaseResponse();
                 (response.Success, response.Message) = _logService.ValidateLogDto(dto);
                 if (!response.Success) return BadRequest(response);
-                (response.Success, response.Message) = await _logService.WriteToLog(new Log(dto,appId));
+                (response.Success, response.Message) = await _logService.WriteToLog(new Log(dto,_app));
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }
@@ -90,14 +95,15 @@ namespace PodoMicroServices.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResponse>> DeleteLog(int id,[FromHeader] int appId)
+        [HttpDelete("{id}"), Authorize]
+        public async Task<ActionResult<BaseResponse>> DeleteLog(int id)
         {
             try
             {
                 await LogRequest();
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                (response.Success, response.Message) = await _logService.DeleteLog(id, appId);
+                (response.Success, response.Message) = await _logService.DeleteLog(id, _app.Id);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }

@@ -17,14 +17,14 @@ namespace PodoMicroServices.Models.LogModels
 
         }
 
-        public Log(LogDto newLog,int appId)
+        public Log(LogDto newLog, App app)
         {
             Name = newLog.Name;
             GroupSession = newLog.GroupSession;
             Created = newLog.Created;
             Severity = newLog.Severity;
             Message = newLog.Message;
-            AppId = appId;
+            App = app;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PodoMicroServices.DAL;
+using PodoMicroServices.Services;
 using PodoMicroServices.Services.EmailServices;
 using PodoMicroServices.Services.FileServices;
 using PodoMicroServices.Services.LogServices;
@@ -13,6 +14,7 @@ namespace PodoMicroServices.ConfigureServices
         { 
             services.AddDbContext<PodoMicroServiceContext>(options => options.UseSqlServer(conString));
             services.AddTransient<EmailService>();
+            services.AddTransient<UserService>();
             ConfigureLogServices(services);
             ConfigureFileServices(services);
             ConfigureSecretServices(services);

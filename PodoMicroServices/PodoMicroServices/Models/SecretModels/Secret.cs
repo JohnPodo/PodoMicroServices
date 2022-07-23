@@ -15,10 +15,10 @@ namespace PodoMicroServices.Models.SecretModels
 
         }
 
-        public Secret(SecretDto dto, int appId)
+        public Secret(SecretDto dto, App app)
         {
             Value = dto.Value;
-            AppId = appId;
+            App = app;
             ExpiresIn = dto.ExpiresIn;
             CreatedAt = dto.CreatedAt;
             Name = dto.Name;

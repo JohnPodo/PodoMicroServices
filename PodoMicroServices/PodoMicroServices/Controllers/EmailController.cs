@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PodoMicroServices.Controllers.BaseClass;
 using PodoMicroServices.Dto.EmailDto;
 using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
+using PodoMicroServices.Services;
 using PodoMicroServices.Services.EmailServices;
 using PodoMicroServices.Services.LogServices;
 
@@ -12,12 +14,12 @@ namespace PodoMicroServices.Controllers
     {
         private readonly EmailService _service;
 
-        public EmailController(LogService logService, EmailService service) : base(logService)
+        public EmailController(LogService logService, EmailService service,UserService userService) : base(logService, userService)
         {
             _service = service;
         }
 
-        [HttpPost]
+        [HttpPost,Authorize]
         public async Task<ActionResult<BaseResponse>> DeleteLog(EmailDto dto)
         {
             try

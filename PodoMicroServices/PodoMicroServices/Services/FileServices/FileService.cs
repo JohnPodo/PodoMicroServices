@@ -18,7 +18,7 @@ namespace PodoMicroServices.Services.FileServices
             if (id == 0) return new BaseDataResponse<Models.FileModels.File>("Invalid Id");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredPic = await _context.Files.Where(f => f.Id == id).Where(f => f.AppId == appId).AsNoTracking().FirstOrDefaultAsync();
+            var desiredPic = await _context.Files.Where(f => f.Id == id).Where(f => f.App != null && f.App.Id == appId).AsNoTracking().FirstOrDefaultAsync();
             if (desiredPic is null) return new BaseDataResponse<Models.FileModels.File>("No Picture Found");
             return new BaseDataResponse<Models.FileModels.File>(desiredPic);
         }
@@ -27,7 +27,7 @@ namespace PodoMicroServices.Services.FileServices
             if (appId == 0) return new BaseDataResponse<List<Models.FileModels.File>>("Invalid appId");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredFiles = await _context.Files.Where(f => f.AppId == appId).AsNoTracking().ToListAsync();
+            var desiredFiles = await _context.Files.Where(f => f.App != null && f.App.Id == appId).AsNoTracking().ToListAsync();
             if (desiredFiles is null) return new BaseDataResponse<List<Models.FileModels.File>>("No Pictures Found");
             return new BaseDataResponse<List<Models.FileModels.File>>(desiredFiles);
         }
@@ -38,7 +38,7 @@ namespace PodoMicroServices.Services.FileServices
             if (string.IsNullOrEmpty(folderName)) return new BaseDataResponse<List<Models.FileModels.File>>("Invalid folderName");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredFiles = await _context.Files.Where(f => f.AppId == appId).Where(f => f.Folder == folderName).AsNoTracking().ToListAsync();
+            var desiredFiles = await _context.Files.Where(f => f.App != null && f.App.Id == appId).Where(f => f.Folder == folderName).AsNoTracking().ToListAsync();
             if (desiredFiles is null) return new BaseDataResponse<List<Models.FileModels.File>>("No Pictures Found");
             return new BaseDataResponse<List<Models.FileModels.File>>(desiredFiles);
         }
@@ -55,7 +55,7 @@ namespace PodoMicroServices.Services.FileServices
             if (newFile is null) return new BaseResponse("Invalid data");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredFile = await _context.Files.Where(f => f.Name == newFile.Name && f.Folder == newFile.Folder && f.AppId == newFile.AppId).AsNoTracking().FirstOrDefaultAsync();
+            var desiredFile = await _context.Files.Where(f => f.Name == newFile.Name && f.Folder == newFile.Folder && f.App == newFile.App).AsNoTracking().FirstOrDefaultAsync();
             if (desiredFile is not null) return new BaseResponse("File with that name already exists");
             await _context.Files.AddAsync(newFile);
             await _context.SaveChangesAsync();
@@ -73,7 +73,7 @@ namespace PodoMicroServices.Services.FileServices
             if (id == 0) return new BaseResponse("Invalid id");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Files is null) throw new Exception("Files Db Set is null");
-            var desiredFile = await _context.Files.Where(f => f.Id == id).Where(f => f.AppId == appId).FirstOrDefaultAsync();
+            var desiredFile = await _context.Files.Where(f => f.Id == id).Where(f => f.App != null && f.App.Id == appId).FirstOrDefaultAsync();
             if (desiredFile is null) return new BaseResponse("No File found.");
             _context.Files.Remove(desiredFile);
             await _context.SaveChangesAsync();

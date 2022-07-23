@@ -14,14 +14,14 @@ namespace PodoMicroServices.Models.FileModels
 
         }
 
-        public File(FileDto dto,int appId)
+        public File(FileDto dto,App app)
         {
             Folder = dto.Folder;
             Content = dto.Content;
             Alt = dto.Alt;
             Created = dto.Created;
             Name = dto.Name;
-            AppId = appId;
+            App = app;
         }
     }
 }

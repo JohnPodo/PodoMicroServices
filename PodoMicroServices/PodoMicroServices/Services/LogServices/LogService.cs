@@ -23,7 +23,7 @@ namespace PodoMicroServices.Services.LogServices
             if (appId == 0) return new BaseDataResponse<List<Log>>("No App has Id of 0");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Logs is null) throw new Exception("Logs Db Set is null");
-            var logs = await _context.Logs.Where(l => l.AppId == appId).AsNoTracking().ToListAsync();
+            var logs = await _context.Logs.Where(l => l.App != null && l.App.Id == appId).AsNoTracking().ToListAsync();
             return new BaseDataResponse<List<Log>>(logs);
         }
 
@@ -32,7 +32,7 @@ namespace PodoMicroServices.Services.LogServices
             if (session == Guid.Empty) return new BaseDataResponse<List<Log>>("No Sessiong was provided");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Logs is null) throw new Exception("Logs Db Set is null");
-            var logs = await _context.Logs.Where(l => l.GroupSession == session).Where(l => l.AppId == appId).AsNoTracking().ToListAsync();
+            var logs = await _context.Logs.Where(l => l.GroupSession == session).Where(l => l.App != null && l.App.Id == appId).AsNoTracking().ToListAsync();
             return new BaseDataResponse<List<Log>>(logs);
         }
 
@@ -41,7 +41,7 @@ namespace PodoMicroServices.Services.LogServices
             if (appId == 0) return new BaseDataResponse<List<Log>>("No App has Id of 1");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Logs is null) throw new Exception("Logs Db Set is null");
-            var logs = await _context.Logs.Where(l => l.AppId == appId).Where(l => l.Severity == severity).AsNoTracking().ToListAsync();
+            var logs = await _context.Logs.Where(l => l.App != null && l.App.Id == appId).Where(l => l.Severity == severity).AsNoTracking().ToListAsync();
             return new BaseDataResponse<List<Log>>(logs);
         }
 
@@ -65,7 +65,7 @@ namespace PodoMicroServices.Services.LogServices
         {
             return new Log()
             {
-                AppId = 1,
+                App = _context?.Apps?.FirstOrDefault(s=>s.Name == "DefaultApp"),
                 Severity = severity,
                 Created = DateTime.Now,
                 Name = _name,
@@ -115,7 +115,7 @@ namespace PodoMicroServices.Services.LogServices
                 if (id == 0) return (false, "Could not delete that log");
                 if (_context is null) throw new Exception("Database Context is null");
                 if (_context.Logs is null) throw new Exception("Logs Db Set is null");
-                var desiredLog = _context.Logs.Where(l => l.Id == id).Where(l => l.AppId == appId).FirstOrDefault();
+                var desiredLog = _context.Logs.Where(l => l.Id == id).Where(l => l.App != null && l.App.Id == appId).FirstOrDefault();
                 if (desiredLog is null) return (false, $"No Log with id : {id}");
                 _context.Logs.Remove(desiredLog);
                 await _context.SaveChangesAsync();
