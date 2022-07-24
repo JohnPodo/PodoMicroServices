@@ -158,6 +158,92 @@ namespace PodoMicroServices.Controllers
             }
         }
 
+        [HttpPost,Authorize]
+        public async Task<ActionResult<BaseResponse>> RegisterApp([FromBody] string appName)
+        {
+            try
+            {
+                await LogRequest();
+                if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("Login First"));
+                var response = await _userService.RegisterApp(appName,_userService._LoggedInUser.Id);
+                if (!response.Success) return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                await WriteToLog($"Exception caught with message : {ex.Message}", Severity.Fatal);
+                return StatusCode(500);
+            }
+        }
 
+        [HttpDelete("{appId}"), Authorize]
+        public async Task<ActionResult<BaseResponse>> DeleteApp(int appId)
+        {
+            try 
+            {
+                await LogRequest();
+                if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("Login First"));
+                var response = await _userService.DeleteApp(appId, _userService._LoggedInUser.Id);
+                if (!response.Success) return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                await WriteToLog($"Exception caught with message : {ex.Message}", Severity.Fatal);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet, Authorize]
+        public async Task<ActionResult<BaseDataResponse<List<App>>>> GetMyApps()
+        {
+            try
+            {
+                await LogRequest();
+                if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("Login First"));
+                var response = await _userService.GetMyApps(_userService._LoggedInUser.Id);
+                if (!response.Success) return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                await WriteToLog($"Exception caught with message : {ex.Message}", Severity.Fatal);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{userId}"), Authorize(Roles = "Boss")]
+        public async Task<ActionResult<BaseDataResponse<List<App>>>> GetAppsOfUser(int userId)
+        {
+            try
+            {
+                await LogRequest(); 
+                var response = await _userService.GetMyApps(userId);
+                if (!response.Success) return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                await WriteToLog($"Exception caught with message : {ex.Message}", Severity.Fatal);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{appId}"), Authorize(Roles = "Boss")]
+        public async Task<ActionResult<BaseResponse>> DeleteAppOfUser(int appId, [FromHeader] int userId)
+        {
+            try
+            {
+                await LogRequest(); 
+                var response = await _userService.DeleteApp(appId, userId);
+                if (!response.Success) return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                await WriteToLog($"Exception caught with message : {ex.Message}", Severity.Fatal);
+                return StatusCode(500);
+            }
+        }
     }
 }

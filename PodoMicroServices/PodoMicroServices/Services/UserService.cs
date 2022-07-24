@@ -208,5 +208,42 @@ namespace PodoMicroServices.Services
             await _context.SaveChangesAsync();
             return new BaseResponse();
         }
+
+        public async Task<BaseResponse> RegisterApp(string appName,int userId)
+        {
+            if (string.IsNullOrEmpty(appName)) return new BaseResponse("App Name is required");
+            if (_context is null) throw new Exception("Database Context is null");
+            if (_context.Users is null) throw new Exception("Users Db Set is null");
+            var user = await _context.Users.Where(s => s.Id == userId && s.Accepted).FirstOrDefaultAsync();
+            if(user is null) return new BaseResponse("Invalid User");
+            App newApp = new App()
+            {
+                Name = appName,
+                User = user
+            };
+            if (_context.Apps is null) throw new Exception("Apps Db Set is null");
+            await _context.Apps.AddAsync(newApp);
+            await _context.SaveChangesAsync();
+            return new BaseResponse();
+        }
+
+        public async Task<BaseResponse> DeleteApp(int appId, int userId)
+        { 
+            if (_context is null) throw new Exception("Database Context is null");
+            if (_context.Apps is null) throw new Exception("Apps Db Set is null"); 
+            var wantedApp = await _context.Apps.Where(a=>a.Id==appId && a.User != null && a.User.Id==userId).FirstOrDefaultAsync();
+            if (wantedApp is null) return new BaseResponse("No app found to delete");
+            _context.Apps.Remove(wantedApp);
+            await _context.SaveChangesAsync();
+            return new BaseResponse();
+        }
+
+        public async Task<BaseDataResponse<List<App>>> GetMyApps(int userId)
+        {
+            if (_context is null) throw new Exception("Database Context is null");
+            if (_context.Apps is null) throw new Exception("Apps Db Set is null");
+            var wantedApps = await _context.Apps.Where(a => a.User != null && a.User.Id == userId).AsNoTracking().ToListAsync();
+            return new BaseDataResponse<List<App>>(wantedApps);
+        }
     }
 }
