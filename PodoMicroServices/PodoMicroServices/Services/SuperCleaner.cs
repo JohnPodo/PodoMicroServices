@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PodoMicroServices.Models.LogModels;
+using PodoMicroServices.Common;
 using PodoMicroServices.Services.LogServices;
 
 namespace PodoMicroServices.Services
 {
     public abstract class SuperCleaner : BackgroundService
     {
-        protected LogService _logService; 
+        protected LogService _logService;
         private PeriodicTimer Timer { get; set; }
         public SuperCleaner(IConfiguration config)
         {

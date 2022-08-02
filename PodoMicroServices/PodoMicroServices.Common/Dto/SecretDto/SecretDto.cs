@@ -1,4 +1,4 @@
-﻿namespace PodoMicroServices.Dto.SecretDto
+﻿namespace PodoMicroServices.Common.Dto.SecretDto
 {
     public class SecretDto
     {
@@ -7,6 +7,6 @@
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public TimeSpan ExpiresIn { get; set; } = TimeSpan.FromDays(730);
+        public DateTime? ExpiresIn { get; set; }
     }
 }

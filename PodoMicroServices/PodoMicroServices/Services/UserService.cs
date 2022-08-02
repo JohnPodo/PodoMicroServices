@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PodoMicroServices.Common;
 using PodoMicroServices.DAL;
-using PodoMicroServices.Dto;
 using PodoMicroServices.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text; 
+using System.Text;
 namespace PodoMicroServices.Services
 {
     public class UserService
@@ -86,11 +86,13 @@ namespace PodoMicroServices.Services
             if (dto is null) return new BaseDataResponse<string>("Invalid Data");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Users is null) throw new Exception("Users Db Set is null");
-            var users = await _context.Users.Where(u => u.Username == dto.Username && u.Accepted).AsNoTracking().ToListAsync();
+            var users = await _context.Users.Where(u => u.Username == dto.Username && u.Accepted).Include(u => u.Apps).AsNoTracking().ToListAsync();
             if (users.Count > 1) throw new Exception("Found more than one user with same credentials");
             var user = users.FirstOrDefault();
             if (user is null) return new BaseDataResponse<string>("No User Found");
-            if(!VerifyPassword(dto.Password,user.PasswordSalt,user.PasswordHash)) return new BaseDataResponse<string>("Invalid Credentials");
+            if (dto.AppId != 0)
+                if (user.Apps.FirstOrDefault(a => a.Id == dto.AppId) == null) return new BaseDataResponse<string>("Invalid AppId");
+            if (!VerifyPassword(dto.Password, user.PasswordSalt, user.PasswordHash)) return new BaseDataResponse<string>("Invalid Credentials");
             var token = CreateToken(user, dto.AppId);
             return new BaseDataResponse<string>() { Data = token };
         }
@@ -156,7 +158,7 @@ namespace PodoMicroServices.Services
             return new BaseDataResponse<List<User>>(users);
         }
 
-        public async Task<BaseResponse> HandleUser(int id,bool accept)
+        public async Task<BaseResponse> HandleUser(int id, bool accept)
         {
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Users is null) throw new Exception("Users Db Set is null");
@@ -164,7 +166,7 @@ namespace PodoMicroServices.Services
             if (user is null) return new BaseResponse("No User with that Id");
             if (!accept)
             {
-                _context.Users.Remove(user); 
+                _context.Users.Remove(user);
             }
             else
             {
@@ -192,15 +194,15 @@ namespace PodoMicroServices.Services
             var user = await _context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (user is null) return new BaseResponse("No User with that Id");
             user.Apps.ForEach(async a =>
-            { 
+            {
                 _context?.Logs?.RemoveRange(await _context.Logs.Where(l => l.App != null && l.App.Id == a.Id).ToArrayAsync());
                 _context?.Files?.RemoveRange(await _context.Files.Where(l => l.App != null && l.App.Id == a.Id).ToArrayAsync());
-                _context?.Secrets?.RemoveRange(await _context.Secrets.Where(l => l.App != null && l.App.Id == a.Id).ToArrayAsync()); 
+                _context?.Secrets?.RemoveRange(await _context.Secrets.Where(l => l.App != null && l.App.Id == a.Id).ToArrayAsync());
                 if (_context is null) throw new Exception("Database Context is null");
                 await _context.SaveChangesAsync();
-                _context.Apps?.Remove(a); 
+                _context.Apps?.Remove(a);
                 await _context.SaveChangesAsync();
-            }) ;
+            });
             _context.Logs?.RemoveRange(await _context.Logs.Where(l => l.App == null).ToArrayAsync());
             _context.Files?.RemoveRange(await _context.Files.Where(l => l.App == null).ToArrayAsync());
             _context.Secrets?.RemoveRange(await _context.Secrets.Where(l => l.App == null).ToArrayAsync());
@@ -209,13 +211,13 @@ namespace PodoMicroServices.Services
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> RegisterApp(string appName,int userId)
+        public async Task<BaseResponse> RegisterApp(string appName, int userId)
         {
             if (string.IsNullOrEmpty(appName)) return new BaseResponse("App Name is required");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Users is null) throw new Exception("Users Db Set is null");
             var user = await _context.Users.Where(s => s.Id == userId && s.Accepted).FirstOrDefaultAsync();
-            if(user is null) return new BaseResponse("Invalid User");
+            if (user is null) return new BaseResponse("Invalid User");
             App newApp = new App()
             {
                 Name = appName,
@@ -228,10 +230,10 @@ namespace PodoMicroServices.Services
         }
 
         public async Task<BaseResponse> DeleteApp(int appId, int userId)
-        { 
+        {
             if (_context is null) throw new Exception("Database Context is null");
-            if (_context.Apps is null) throw new Exception("Apps Db Set is null"); 
-            var wantedApp = await _context.Apps.Where(a=>a.Id==appId && a.User != null && a.User.Id==userId).FirstOrDefaultAsync();
+            if (_context.Apps is null) throw new Exception("Apps Db Set is null");
+            var wantedApp = await _context.Apps.Where(a => a.Id == appId && a.User != null && a.User.Id == userId).FirstOrDefaultAsync();
             if (wantedApp is null) return new BaseResponse("No app found to delete");
             _context.Apps.Remove(wantedApp);
             await _context.SaveChangesAsync();

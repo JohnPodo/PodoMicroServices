@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PodoMicroServices.Common;
 using PodoMicroServices.DAL;
-using PodoMicroServices.Models;
-using PodoMicroServices.Models.SecretModels;
 
 namespace PodoMicroServices.Services.SecretServices
 {
@@ -34,15 +33,15 @@ namespace PodoMicroServices.Services.SecretServices
             return new BaseDataResponse<List<Models.SecretModels.Secret>>(desiredFiles);
         }
 
-        public async Task<BaseDataResponse<List<Models.SecretModels.Secret>>> GetSecret(int appId, string secretName)
+        public async Task<BaseDataResponse<Models.SecretModels.Secret>> GetSecret(int appId, string secretName)
         {
-            if (appId == 0) return new BaseDataResponse<List<Models.SecretModels.Secret>>("Invalid appId");
-            if (string.IsNullOrEmpty(secretName)) return new BaseDataResponse<List<Models.SecretModels.Secret>>("Invalid folderName");
+            if (appId == 0) return new BaseDataResponse<Models.SecretModels.Secret>("Invalid appId");
+            if (string.IsNullOrEmpty(secretName)) return new BaseDataResponse<Models.SecretModels.Secret>("Invalid folderName");
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredFiles = await _context.Secrets.Where(f => f.App != null && f.App.Id == appId).Where(f => f.Name == secretName).AsNoTracking().ToListAsync();
-            if (desiredFiles is null) return new BaseDataResponse<List<Models.SecretModels.Secret>>("No Pictures Found");
-            return new BaseDataResponse<List<Models.SecretModels.Secret>>(desiredFiles);
+            var desiredFiles = await _context.Secrets.Where(f => f.App != null && f.App.Id == appId).Where(f => f.Name == secretName).AsNoTracking().FirstOrDefaultAsync();
+            if (desiredFiles is null) return new BaseDataResponse<Models.SecretModels.Secret>("No Pictures Found");
+            return new BaseDataResponse<Models.SecretModels.Secret>(desiredFiles);
         }
 
         public async Task<BaseResponse> AddSecret(Models.SecretModels.Secret newSecret)
@@ -92,12 +91,12 @@ namespace PodoMicroServices.Services.SecretServices
         {
             if (_context is null) throw new Exception("Database Context is null");
             if (_context.Secrets is null) throw new Exception("Secrets Db Set is null");
-            var desiredSecret = await _context.Secrets.ToListAsync();
+            var desiredSecret = await _context.Secrets.Where(s=>s.ExpiresIn != null).ToListAsync();
             if (desiredSecret is null) return new BaseResponse("No Secrets Found");
             bool saveChanges = false;
             desiredSecret.ForEach(f =>
             {
-                if (f.CreatedAt > DateTime.Now.Add(-f.ExpiresIn).AddDays(-1))
+                if (f.ExpiresIn > DateTime.Now.AddDays(-1))
                 {
                     _context.Secrets.Remove(f);
                     saveChanges = true;

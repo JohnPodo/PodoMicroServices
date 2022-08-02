@@ -1,4 +1,4 @@
-﻿namespace PodoMicroServices.Models.LogModels
+﻿namespace PodoMicroServices.Common
 {
     public enum Severity
     {

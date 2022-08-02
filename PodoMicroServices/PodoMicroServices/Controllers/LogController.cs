@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.LogDto;
 using PodoMicroServices.Controllers.BaseClass;
-using PodoMicroServices.Dto.LogDto;
-using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
 using PodoMicroServices.Services;
 using PodoMicroServices.Services.LogServices;
@@ -11,7 +11,7 @@ namespace PodoMicroServices.Controllers
 {
     public class LogController : SuperController
     {
-        public LogController(LogService service,UserService userService) : base(service, userService)
+        public LogController(LogService service, UserService userService) : base(service, userService)
         {
         }
 
@@ -80,11 +80,11 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
-                if (_app is null) return BadRequest(new BaseResponse("No App Found")); 
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
                 (response.Success, response.Message) = _logService.ValidateLogDto(dto);
                 if (!response.Success) return BadRequest(response);
-                (response.Success, response.Message) = await _logService.WriteToLog(new Log(dto,_app));
+                (response.Success, response.Message) = await _logService.WriteToLog(new Log(dto, _app));
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }

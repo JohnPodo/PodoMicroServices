@@ -1,4 +1,4 @@
-﻿namespace PodoMicroServices.Dto.FileDto
+﻿namespace PodoMicroServices.Common.Dto.FileDto
 {
     public class FileDto
     {

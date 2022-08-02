@@ -1,6 +1,6 @@
 ﻿using MailKit.Security;
 
-namespace PodoMicroServices.Dto.EmailDto
+namespace PodoMicroServices.Common.Dto.EmailDto
 {
     public class EmailDto
     {

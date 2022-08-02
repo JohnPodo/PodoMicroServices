@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.LogDto;
 using PodoMicroServices.DAL;
-using PodoMicroServices.Dto.LogDto;
-using PodoMicroServices.Models;
 using PodoMicroServices.Models.LogModels;
 
 namespace PodoMicroServices.Services.LogServices
@@ -65,7 +65,7 @@ namespace PodoMicroServices.Services.LogServices
         {
             return new Log()
             {
-                App = _context?.Apps?.FirstOrDefault(s=>s.Name == "DefaultApp"),
+                App = _context?.Apps?.FirstOrDefault(s => s.Name == "DefaultApp"),
                 Severity = severity,
                 Created = DateTime.Now,
                 Name = _name,
@@ -78,7 +78,7 @@ namespace PodoMicroServices.Services.LogServices
         internal (bool, string) ValidateLogDto(LogDto dto)
         {
             if (dto is null) return (false, "Missing Argument");
-            if (dto.GroupSession == Guid.Empty 
+            if (dto.GroupSession == Guid.Empty
                 || dto.Severity == Severity.NoLogging
                 || string.IsNullOrEmpty(dto.Name)
                 || string.IsNullOrEmpty(dto.Message)
@@ -108,7 +108,7 @@ namespace PodoMicroServices.Services.LogServices
             }
         }
 
-        internal async Task<(bool, string)> DeleteLog(int id,int appId)
+        internal async Task<(bool, string)> DeleteLog(int id, int appId)
         {
             try
             {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.SecretDto;
 using PodoMicroServices.Controllers.BaseClass;
-using PodoMicroServices.Dto.SecretDto;
-using PodoMicroServices.Models;
-using PodoMicroServices.Models.LogModels;
 using PodoMicroServices.Services;
 using PodoMicroServices.Services.LogServices;
 using PodoMicroServices.Services.SecretServices;
@@ -42,7 +41,7 @@ namespace PodoMicroServices.Controllers
         }
 
         [HttpGet("{secretName}"), Authorize]
-        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetSecretByName( string secretName)
+        public async Task<ActionResult<BaseDataResponse<Models.FileModels.File>>> GetSecretByName(string secretName)
         {
             try
             {
@@ -61,13 +60,13 @@ namespace PodoMicroServices.Controllers
 
         }
         [HttpGet("{id}"), Authorize]
-        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetSecretById( int id)
+        public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetSecretById(int id)
         {
             try
             {
                 await LogRequest();
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
-                var data = await _service.GetSecret( id, _app.Id);
+                var data = await _service.GetSecret(id, _app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
                 return Ok(data);
@@ -87,9 +86,11 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
+                if (dto.ExpiresIn is not null)
+                    if (dto.ExpiresIn < DateTime.Now) return BadRequest(new BaseResponse("Secret alredy is expired"));
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                var newSecret = new Models.SecretModels.Secret(dto, _app); 
+                var newSecret = new Models.SecretModels.Secret(dto, _app);
                 response = _service.ValidateSecret(newSecret);
                 if (!response.Success) return BadRequest(response);
                 response = await _service.AddSecret(newSecret);
@@ -110,12 +111,15 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
+                if(id == 0) return BadRequest(new BaseResponse("id is necessary"));
+                if (dto.ExpiresIn is not null)
+                    if (dto.ExpiresIn > DateTime.Now) return BadRequest(new BaseResponse("Secret alredy is expired"));
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                var newSecret = new Models.SecretModels.Secret(dto, _app); 
+                var newSecret = new Models.SecretModels.Secret(dto, _app);
                 response = _service.ValidateSecret(newSecret);
                 if (!response.Success) return BadRequest(response);
-                response = await _service.UpdateSecret(id,newSecret);
+                response = await _service.UpdateSecret(id, newSecret);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }
@@ -133,6 +137,7 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
+                if(id == 0) return BadRequest(new BaseResponse("No id Given"));
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = await _service.DeleteSecret(id, _app.Id);
                 if (!response.Success) return BadRequest(response);

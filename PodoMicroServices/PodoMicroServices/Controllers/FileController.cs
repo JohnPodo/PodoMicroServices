@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.FileDto;
 using PodoMicroServices.Controllers.BaseClass;
-using PodoMicroServices.Dto.FileDto;
-using PodoMicroServices.Models;
-using PodoMicroServices.Models.LogModels;
 using PodoMicroServices.Services;
 using PodoMicroServices.Services.FileServices;
 using PodoMicroServices.Services.LogServices;
@@ -14,18 +13,18 @@ namespace PodoMicroServices.Controllers
     {
         private readonly FileService _service;
 
-        public FileController(LogService logService, FileService service,UserService userService) : base(logService, userService)
+        public FileController(LogService logService, FileService service, UserService userService) : base(logService, userService)
         {
             _service = service;
         }
 
-        [HttpGet,Authorize]
+        [HttpGet, Authorize]
         public async Task<ActionResult<BaseDataResponse<List<Models.FileModels.File>>>> GetFilesPerAppId()
         {
             try
             {
                 await LogRequest();
-                if(_app is null) return BadRequest(new BaseResponse("No App Found"));
+                if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var data = await _service.GetFiles(_app.Id);
                 if (data is null) return StatusCode(500);
                 if (!data.Success) return BadRequest(data);
@@ -44,7 +43,7 @@ namespace PodoMicroServices.Controllers
         {
             try
             {
-                await LogRequest(); 
+                await LogRequest();
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var data = await _service.GetFiles(_app.Id, folderName);
                 if (data is null) return StatusCode(500);
@@ -80,14 +79,14 @@ namespace PodoMicroServices.Controllers
         }
 
         [HttpPost, Authorize]
-        public async Task<ActionResult<BaseResponse>> AddFile([FromBody]FileDto dto)
+        public async Task<ActionResult<BaseResponse>> AddFile([FromBody] FileDto dto)
         {
             try
             {
                 await LogRequest();
                 if (_app is null) return BadRequest(new BaseResponse("No App Found"));
                 var response = new BaseResponse();
-                var newFile = new Models.FileModels.File(dto, _app); 
+                var newFile = new Models.FileModels.File(dto, _app);
                 response = _service.ValidateFile(newFile);
                 if (!response.Success) return BadRequest(response);
                 response = await _service.AddFile(newFile);

@@ -1,4 +1,4 @@
-﻿namespace PodoMicroServices.Models
+﻿namespace PodoMicroServices.Common
 {
     public class BaseResponse
     {

@@ -1,9 +1,10 @@
-﻿using PodoMicroServices.Dto.LogDto;
+﻿using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.LogDto;
 
 namespace PodoMicroServices.Models.LogModels
 {
     public class Log : BaseModel
-    { 
+    {
         public Guid GroupSession { get; set; }
 
         public DateTime Created { get; set; } = DateTime.Now;
