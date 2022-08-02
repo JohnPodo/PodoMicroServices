@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PodoMicroServices.Common;
 using PodoMicroServices.Controllers.BaseClass;
-using PodoMicroServices.Dto;
 using PodoMicroServices.Models;
-using PodoMicroServices.Models.LogModels;
 using PodoMicroServices.Services;
 using PodoMicroServices.Services.LogServices;
 
@@ -22,7 +21,7 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
-                var response = await _userService.GetUsers(); 
+                var response = await _userService.GetUsers();
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }
@@ -51,7 +50,7 @@ namespace PodoMicroServices.Controllers
         }
 
         [HttpPut("{id}"), Authorize(Roles = "Boss")]
-        public async Task<ActionResult<BaseResponse>> HandleUser([FromBody] bool accept,int id)
+        public async Task<ActionResult<BaseResponse>> HandleUser([FromBody] bool accept, int id)
         {
             try
             {
@@ -73,7 +72,7 @@ namespace PodoMicroServices.Controllers
             try
             {
                 await LogRequest();
-                if(_userService._LoggedInUser is null) return BadRequest(new BaseResponse("No User Logged In"));
+                if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("No User Logged In"));
                 var response = await _userService.ChangePassword(_userService._LoggedInUser.Id, newPassord);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
@@ -145,7 +144,7 @@ namespace PodoMicroServices.Controllers
         {
             try
             {
-                await LogRequest(); 
+                await LogRequest();
                 var response = new BaseResponse();
                 response = await _userService.DeleteUser(id);
                 if (!response.Success) return BadRequest(response);
@@ -158,14 +157,14 @@ namespace PodoMicroServices.Controllers
             }
         }
 
-        [HttpPost,Authorize]
+        [HttpPost, Authorize]
         public async Task<ActionResult<BaseResponse>> RegisterApp([FromBody] string appName)
         {
             try
             {
                 await LogRequest();
                 if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("Login First"));
-                var response = await _userService.RegisterApp(appName,_userService._LoggedInUser.Id);
+                var response = await _userService.RegisterApp(appName, _userService._LoggedInUser.Id);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
             }
@@ -179,7 +178,7 @@ namespace PodoMicroServices.Controllers
         [HttpDelete("{appId}"), Authorize]
         public async Task<ActionResult<BaseResponse>> DeleteApp(int appId)
         {
-            try 
+            try
             {
                 await LogRequest();
                 if (_userService._LoggedInUser is null) return BadRequest(new BaseResponse("Login First"));
@@ -217,7 +216,7 @@ namespace PodoMicroServices.Controllers
         {
             try
             {
-                await LogRequest(); 
+                await LogRequest();
                 var response = await _userService.GetMyApps(userId);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);
@@ -234,7 +233,7 @@ namespace PodoMicroServices.Controllers
         {
             try
             {
-                await LogRequest(); 
+                await LogRequest();
                 var response = await _userService.DeleteApp(appId, userId);
                 if (!response.Success) return BadRequest(response);
                 return Ok(response);

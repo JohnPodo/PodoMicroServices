@@ -1,4 +1,4 @@
-﻿using PodoMicroServices.Dto.FileDto;
+﻿using PodoMicroServices.Common.Dto.FileDto;
 
 namespace PodoMicroServices.Models.FileModels
 {
@@ -14,7 +14,7 @@ namespace PodoMicroServices.Models.FileModels
 
         }
 
-        public File(FileDto dto,App app)
+        public File(FileDto dto, App app)
         {
             Folder = dto.Folder;
             Content = dto.Content;

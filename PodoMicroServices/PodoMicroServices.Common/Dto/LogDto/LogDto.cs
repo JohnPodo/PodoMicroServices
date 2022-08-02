@@ -1,6 +1,4 @@
-﻿using PodoMicroServices.Models.LogModels;
-
-namespace PodoMicroServices.Dto.LogDto
+﻿namespace PodoMicroServices.Common.Dto.LogDto
 {
     public class LogDto
     {
@@ -13,6 +11,6 @@ namespace PodoMicroServices.Dto.LogDto
 
         public Severity Severity { get; set; }
 
-        public string Message { get; set; } = String.Empty; 
+        public string Message { get; set; } = String.Empty;
     }
 }

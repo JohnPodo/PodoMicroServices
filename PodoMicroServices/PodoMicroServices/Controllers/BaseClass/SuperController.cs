@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PodoMicroServices.Common;
 using PodoMicroServices.Models;
-using PodoMicroServices.Models.LogModels;
 using PodoMicroServices.Services;
 using PodoMicroServices.Services.LogServices;
 
@@ -17,8 +17,8 @@ namespace PodoMicroServices.Controllers.BaseClass
         protected readonly UserService _userService;
         protected readonly App? _app;
 
-        public SuperController(LogService service,UserService userService)
-        { 
+        public SuperController(LogService service, UserService userService)
+        {
             _logService = service;
             _userService = userService;
             _logService.Initialize(this.GetType().Name, Guid.NewGuid());

@@ -1,4 +1,4 @@
-﻿using PodoMicroServices.Dto.SecretDto;
+﻿using PodoMicroServices.Common.Dto.SecretDto;
 
 namespace PodoMicroServices.Models.SecretModels
 {
@@ -8,7 +8,7 @@ namespace PodoMicroServices.Models.SecretModels
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public TimeSpan ExpiresIn { get; set; } = TimeSpan.FromDays(730);
+        public DateTime? ExpiresIn { get; set; }
 
         public Secret()
         {

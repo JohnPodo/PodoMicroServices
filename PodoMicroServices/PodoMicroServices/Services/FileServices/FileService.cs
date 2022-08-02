@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PodoMicroServices.Common;
 using PodoMicroServices.DAL;
-using PodoMicroServices.Models;
 
 namespace PodoMicroServices.Services.FileServices
 {

@@ -1,14 +1,14 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
-using PodoMicroServices.Dto.EmailDto;
-using PodoMicroServices.Models;
+using PodoMicroServices.Common;
+using PodoMicroServices.Common.Dto.EmailDto;
 
 namespace PodoMicroServices.Services.EmailServices
 {
     public class EmailService
     {
         internal MimeMessage CreateEmail(EmailDto mailRequest)
-        { 
+        {
             var message = new MimeMessage();
             message.From.Add(MailboxAddress.Parse(mailRequest.From));
             message.To.Add(MailboxAddress.Parse(mailRequest.To));
@@ -82,7 +82,7 @@ namespace PodoMicroServices.Services.EmailServices
         public async Task<BaseResponse> SendEmail(EmailDto mailRequest)
         {
             BaseResponse response = new BaseResponse();
-             
+
             var message = CreateEmail(mailRequest);
 
             SmtpClient smtpClient = new SmtpClient();

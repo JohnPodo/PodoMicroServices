@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PodoMicroServices.ConfigureServices;
@@ -16,11 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
-    Description = "Standard Authorization header using the bearer scheme (bearer {token})",
-    In = ParameterLocation.Header,
-    Name = "Authorization",
-    Type = SecuritySchemeType.ApiKey
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the bearer scheme (bearer {token})",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
     });
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();

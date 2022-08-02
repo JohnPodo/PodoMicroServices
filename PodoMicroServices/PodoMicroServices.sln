@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodoMicroServices", "PodoMicroServices\PodoMicroServices.csproj", "{4EF5754B-9746-4D94-A691-45C04F8BFE48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PodoMicroServices", "PodoMicroServices\PodoMicroServices.csproj", "{4EF5754B-9746-4D94-A691-45C04F8BFE48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoMicroServices.TestsProj", "PoMicroServices.TestsProj\PoMicroServices.TestsProj.csproj", "{B4823690-1A82-4362-AC18-31117FF6FBB0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PodoMicroServices.Consumer", "PodoMicroServices.Consumer\PodoMicroServices.Consumer.csproj", "{5E2E2BEA-0F4E-43AC-975A-46CF98DB5BFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodoMicroServices.Common", "PodoMicroServices.Common\PodoMicroServices.Common.csproj", "{9C093B96-86CE-4C05-A9BB-4FAD86EBA667}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{4EF5754B-9746-4D94-A691-45C04F8BFE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EF5754B-9746-4D94-A691-45C04F8BFE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EF5754B-9746-4D94-A691-45C04F8BFE48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4823690-1A82-4362-AC18-31117FF6FBB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4823690-1A82-4362-AC18-31117FF6FBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4823690-1A82-4362-AC18-31117FF6FBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4823690-1A82-4362-AC18-31117FF6FBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E2E2BEA-0F4E-43AC-975A-46CF98DB5BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E2E2BEA-0F4E-43AC-975A-46CF98DB5BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E2E2BEA-0F4E-43AC-975A-46CF98DB5BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E2E2BEA-0F4E-43AC-975A-46CF98DB5BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C093B96-86CE-4C05-A9BB-4FAD86EBA667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C093B96-86CE-4C05-A9BB-4FAD86EBA667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C093B96-86CE-4C05-A9BB-4FAD86EBA667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C093B96-86CE-4C05-A9BB-4FAD86EBA667}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

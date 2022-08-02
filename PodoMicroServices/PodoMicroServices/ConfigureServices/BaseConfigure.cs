@@ -10,8 +10,8 @@ namespace PodoMicroServices.ConfigureServices
 {
     public static class BaseConfigure
     {
-        public static void ConfigureCustomServices(this IServiceCollection services,string conString)
-        { 
+        public static void ConfigureCustomServices(this IServiceCollection services, string conString)
+        {
             services.AddDbContext<PodoMicroServiceContext>(options => options.UseSqlServer(conString));
             services.AddTransient<EmailService>();
             services.AddTransient<UserService>();
@@ -23,16 +23,16 @@ namespace PodoMicroServices.ConfigureServices
         public static void ConfigureLogServices(this IServiceCollection services)
         {
             services.AddTransient<LogService>();
-            services.AddHostedService<LogCleaner>(); 
+            services.AddHostedService<LogCleaner>();
         }
 
         public static void ConfigureFileServices(this IServiceCollection services)
         {
-            services.AddTransient<FileService>(); 
-        } 
-         public static void ConfigureSecretServices(this IServiceCollection services)
+            services.AddTransient<FileService>();
+        }
+        public static void ConfigureSecretServices(this IServiceCollection services)
         {
-            services.AddTransient<SecretService>(); 
+            services.AddTransient<SecretService>();
             services.AddHostedService<SecretCleaner>();
         }
     }
